@@ -1,0 +1,160 @@
+Bottom: ccfecbc2ad194c69137b5473255a131035e394c3
+Top:    3e3ed8764dacca8c524408ad81171fb24c2360fc
+Author: scott snyder <sss@karma>
+Date:   2020-05-22 00:13:13 -0400
+
+Refresh of LD_LIBRARY_PATH
+
+---
+
+diff --git a/level_zero/core/test/unit_tests/CMakeLists.txt b/level_zero/core/test/unit_tests/CMakeLists.txt
+index 3f9841090..d0c32c076 100644
+--- a/level_zero/core/test/unit_tests/CMakeLists.txt
++++ b/level_zero/core/test/unit_tests/CMakeLists.txt
+@@ -160,7 +160,7 @@ if(MSVC)
+     )
+     set(RUN_ULT_CMD $<TARGET_FILE:${TARGET_NAME}>)
+ else()
+-    set(RUN_ULT_CMD LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${TARGET_NAME}> $<TARGET_FILE:${TARGET_NAME}>)
++    set(RUN_ULT_CMD LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${TARGET_NAME}>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:${TARGET_NAME}>)
+ endif()
+ 
+ create_source_tree(${TARGET_NAME} ${L0_ROOT_DIR}/..)
+diff --git a/level_zero/core/test/unit_tests/gen_kernel.cmake b/level_zero/core/test/unit_tests/gen_kernel.cmake
+index e6aefa738..1be715025 100644
+--- a/level_zero/core/test/unit_tests/gen_kernel.cmake
++++ b/level_zero/core/test/unit_tests/gen_kernel.cmake
+@@ -11,9 +11,9 @@ function(level_zero_gen_kernels target platform_name suffix options)
+       set(cloc_cmd_prefix ocloc)
+     else()
+       if(DEFINED NEO__IGC_LIBRARY_PATH)
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH}s $<TARGET_FILE:ocloc>)
+       else()
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       endif()
+     endif()
+   endif()
+diff --git a/level_zero/tools/test/unit_tests/CMakeLists.txt b/level_zero/tools/test/unit_tests/CMakeLists.txt
+index 96846add8..fe3b7f91a 100644
+--- a/level_zero/tools/test/unit_tests/CMakeLists.txt
++++ b/level_zero/tools/test/unit_tests/CMakeLists.txt
+@@ -119,7 +119,7 @@ if(MSVC)
+     )
+     set(RUN_ULT_CMD $<TARGET_FILE:${TARGET_NAME}>)
+ else()
+-    set(RUN_ULT_CMD LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${TARGET_NAME}> $<TARGET_FILE:${TARGET_NAME}>)
++    set(RUN_ULT_CMD LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${TARGET_NAME}>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:${TARGET_NAME}>)
+ endif()
+ 
+ create_source_tree(${TARGET_NAME} ${L0_ROOT_DIR}/..)
+diff --git a/opencl/source/built_ins/kernels/CMakeLists.txt b/opencl/source/built_ins/kernels/CMakeLists.txt
+index 339564493..090a90e7f 100644
+--- a/opencl/source/built_ins/kernels/CMakeLists.txt
++++ b/opencl/source/built_ins/kernels/CMakeLists.txt
+@@ -65,9 +65,9 @@ function(compile_builtin gen_type platform_type builtin bits builtin_options)
+       set(cloc_cmd_prefix ocloc)
+     else()
+       if(DEFINED NEO__IGC_LIBRARY_PATH)
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       else()
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       endif()
+     endif()
+   endif()
+diff --git a/opencl/source/scheduler/scheduler_binary.cmake b/opencl/source/scheduler/scheduler_binary.cmake
+index 895a679b2..d0ae251eb 100644
+--- a/opencl/source/scheduler/scheduler_binary.cmake
++++ b/opencl/source/scheduler/scheduler_binary.cmake
+@@ -37,9 +37,9 @@ function(compile_kernel target gen_type platform_type kernel)
+       set(cloc_cmd_prefix ocloc)
+     else()
+       if(DEFINED NEO__IGC_LIBRARY_PATH)
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       else()
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       endif()
+     endif()
+   endif()
+diff --git a/opencl/test/unit_test/CMakeLists.txt b/opencl/test/unit_test/CMakeLists.txt
+index 6c6a3f846..4223a8d0e 100644
+--- a/opencl/test/unit_test/CMakeLists.txt
++++ b/opencl/test/unit_test/CMakeLists.txt
+@@ -191,9 +191,9 @@ if(NOT DEFINED cloc_cmd_prefix)
+     set(cloc_cmd_prefix ocloc)
+   else()
+     if(DEFINED NEO__IGC_LIBRARY_PATH)
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+     else()
+-      set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++      set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+     endif()
+   endif()
+ endif()
+diff --git a/opencl/test/unit_test/aub_tests/cmake/run_aub_test_target.cmake b/opencl/test/unit_test/aub_tests/cmake/run_aub_test_target.cmake
+index 2e866d818..32bf5c5ec 100644
+--- a/opencl/test/unit_test/aub_tests/cmake/run_aub_test_target.cmake
++++ b/opencl/test/unit_test/aub_tests/cmake/run_aub_test_target.cmake
+@@ -42,7 +42,7 @@ add_custom_command(
+ if(WIN32 OR NOT DEFINED NEO__GMM_LIBRARY_PATH)
+   set(aub_test_cmd_prefix $<TARGET_FILE:igdrcl_aub_tests>)
+ else()
+-  set(aub_test_cmd_prefix LD_LIBRARY_PATH=${NEO__GMM_LIBRARY_PATH} IGDRCL_TEST_SELF_EXEC=off $<TARGET_FILE:igdrcl_aub_tests>)
++  set(aub_test_cmd_prefix LD_LIBRARY_PATH=${NEO__GMM_LIBRARY_PATH}:$ENV{LD_LIBRARY_PATH} IGDRCL_TEST_SELF_EXEC=off $<TARGET_FILE:igdrcl_aub_tests>)
+ endif()
+ 
+ add_custom_command(
+diff --git a/shared/source/built_ins/kernels/CMakeLists.txt b/shared/source/built_ins/kernels/CMakeLists.txt
+index 308a6cb3b..c639bc38e 100644
+--- a/shared/source/built_ins/kernels/CMakeLists.txt
++++ b/shared/source/built_ins/kernels/CMakeLists.txt
+@@ -68,9 +68,9 @@ function(compile_builtin gen_type platform_type builtin bits builtin_options)
+       set(cloc_cmd_prefix ocloc)
+     else()
+       if(DEFINED NEO__IGC_LIBRARY_PATH)
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=${NEO__IGC_LIBRARY_PATH}:$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       else()
+-        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib> $<TARGET_FILE:ocloc>)
++        set(cloc_cmd_prefix LD_LIBRARY_PATH=$<TARGET_FILE_DIR:ocloc_lib>:$ENV{LD_LIBRARY_PATH} $<TARGET_FILE:ocloc>)
+       endif()
+     endif()
+   endif()
+diff --git a/shared/source/os_interface/linux/os_library_linux.cpp b/shared/source/os_interface/linux/os_library_linux.cpp
+index 7e308d8b8..c9f24f554 100644
+--- a/shared/source/os_interface/linux/os_library_linux.cpp
++++ b/shared/source/os_interface/linux/os_library_linux.cpp
+@@ -36,6 +36,9 @@ OsLibrary::OsLibrary(const std::string &name) {
+ #endif
+         this->handle = dlopen(name.c_str(), dlopenFlag);
+     }
++    if (!this->handle) {
++      fprintf (stderr, "%s\n", dlerror());
++    }
+ }
+ 
+ OsLibrary::~OsLibrary() {
+diff --git a/shared/test/unit_test/main.cpp b/shared/test/unit_test/main.cpp
+index ef0f39fc0..74cf9a099 100644
+--- a/shared/test/unit_test/main.cpp
++++ b/shared/test/unit_test/main.cpp
+@@ -188,7 +188,12 @@ int main(int argc, char **argv) {
+     bool enable_abrt = true;
+     if (getenv("IGDRCL_TEST_SELF_EXEC") == nullptr) {
+         std::string wd = getRunPath(argv[0]);
+-        setenv("LD_LIBRARY_PATH", wd.c_str(), 1);
++        std::string ldpath = wd;
++        const char* existing_ldpath = getenv("LD_LIBRARY_PATH");
++        if (existing_ldpath) {
++          ldpath += ":" + std::string(existing_ldpath);
++        }
++        setenv("LD_LIBRARY_PATH", ldpath.c_str(), 1);
+         setenv("IGDRCL_TEST_SELF_EXEC", wd.c_str(), 1);
+         execv(argv[0], argv);
+         printf("FATAL ERROR: cannot self-exec test: %s!, errno: %d\n", argv[0], errno);
