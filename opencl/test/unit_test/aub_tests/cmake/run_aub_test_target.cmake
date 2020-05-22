@@ -42,7 +42,7 @@ add_custom_command(
 if(WIN32 OR NOT DEFINED NEO__GMM_LIBRARY_PATH)
   set(aub_test_cmd_prefix $<TARGET_FILE:igdrcl_aub_tests>)
 else()
-  set(aub_test_cmd_prefix LD_LIBRARY_PATH=${NEO__GMM_LIBRARY_PATH} IGDRCL_TEST_SELF_EXEC=off $<TARGET_FILE:igdrcl_aub_tests>)
+  set(aub_test_cmd_prefix LD_LIBRARY_PATH=${NEO__GMM_LIBRARY_PATH}:$ENV{LD_LIBRARY_PATH} IGDRCL_TEST_SELF_EXEC=off $<TARGET_FILE:igdrcl_aub_tests>)
 endif()
 
 add_custom_command(
