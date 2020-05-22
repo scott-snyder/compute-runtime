@@ -36,6 +36,9 @@ OsLibrary::OsLibrary(const std::string &name) {
 #endif
         this->handle = dlopen(name.c_str(), dlopenFlag);
     }
+    if (!this->handle) {
+      fprintf (stderr, "%s\n", dlerror());
+    }
 }
 
 OsLibrary::~OsLibrary() {
