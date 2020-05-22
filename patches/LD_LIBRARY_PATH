@@ -1,0 +1,11 @@
+Bottom: ccfecbc2ad194c69137b5473255a131035e394c3
+Top:    ccfecbc2ad194c69137b5473255a131035e394c3
+Author: scott snyder <sss@karma>
+Date:   2020-05-22 00:13:05 -0400
+
+Fix for building with a LD_LIBRARY_PATH already set.
+
+
+---
+
+
