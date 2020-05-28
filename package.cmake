@@ -32,6 +32,7 @@ if(UNIX)
     else()
 	    set(OCL_ICD_VENDORDIR "/etc/OpenCL/vendors")
     endif()
+    set(OCL_ICD_VENDORDIR "${CMAKE_INSTALL_PREFIX}/etc/OpenCL/vendors")
   endif()
 
   set(OCL_ICD_RUNTIME_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${NEO_DLL_NAME_BASE}${CMAKE_SHARED_LIBRARY_SUFFIX})
