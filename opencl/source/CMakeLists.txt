@@ -171,6 +171,8 @@ if(${GENERATE_EXECUTABLE})
     )
   else()
     target_link_libraries(${NEO_DYNAMIC_LIB_NAME} ${GMM_LINK_NAME})
+    target_link_directories(${NEO_DYNAMIC_LIB_NAME} PUBLIC ${NEO__GMM_LIBRARY_PATH})
+    
     target_include_directories(${NEO_DYNAMIC_LIB_NAME} PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/dll/linux/devices${BRANCH_DIR_SUFFIX}
     )
