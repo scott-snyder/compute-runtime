@@ -1,7 +1,8 @@
 Version: 1
-Previous: 329a0da7f285614435bb968f4b29b8d578ed3959
-Head: aa2a8eaefad60a0277b2955015588a730c660b30
+Previous: e5ce504cfeaa9c34b8630e4c51373236a82db657
+Head: e30f61bde42c1153660d6a216437ec0df0b35a13
 Applied:
   LD_LIBRARY_PATH: aa2a8eaefad60a0277b2955015588a730c660b30
+  cmake: e30f61bde42c1153660d6a216437ec0df0b35a13
 Unapplied:
 Hidden:
